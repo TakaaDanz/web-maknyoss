@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MakaroniNyoss - Pesan via WhatsApp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f8f9fa;
+        }
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        .logo img { height: 50px; }
+        .nav-icon a { font-size: 1.6rem; color: #333; position: relative; margin-left: 20px; }
+        .cart-badge {
+            position: absolute; top: -8px; right: -8px; background: #e91e63; color: white;
+            font-size: 12px; width: 20px; height: 20px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .home {
+            height: 100vh;
+            background: linear-gradient(135deg, #FFC107 0%, #FF8F00 70%, #FF6D00 100%);
+            color: #0F0C07;
+            display: flex; align-items: center;
+        }
+        .infinite { background: #000; color: white; padding: 20px 0; overflow: hidden; white-space: nowrap; }
+        .infinite h4 { display: inline-block; animation: marquee 15s linear infinite; margin: 0 60px; font-size: 1.4rem; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .product-card {
+            background: white; border-radius: 15px; overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: 0.3s;
+        }
+        .product-card:hover { transform: translateY(-10px); }
+        .product-card img { object-fit: cover; }
+        .price { font-size: 1.4rem; color: #e91e63; font-weight: bold; }
+        .quantity-btn {
+            width: 40px; height: 40px; border-radius: 50%; font-size: 1.3rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-pesan { background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; }
+        .btn-keranjang { background: #ff7700; color: white; }
+        .logo { text-decoration: none; display: flex; align-items: center; }
+        .logo img { width: 50px; height: 50px; margin-right: 20px; }
+        .logo span { color: #FF6D00; font-size: 26px; font-weight: 500; }
+/* CUSTOM DROPDOWN */
+.custom-select {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.select-selected {
+    background: #F7F8FA;
+    border: 1px solid #E0E3EB;
+    border-radius: 6px;
+    padding: 10px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.select-selected .arrow-icon {
+    width: 14px;
+    transition: transform 0.25s ease;
+}
+
+.select-selected.active .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.select-items {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #FFF;
+    border: 1px solid #E0E3EB;
+    border-radius: 8px;
+    margin-top: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: none;
+    z-index: 100;
+
+    /* Tambahan biar bisa scroll */
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.select-items.show {
+    display: block;
+}
+
+.select-items div {
+    padding: 10px 14px;
+    cursor: pointer;
+    color: #071E49;
+    transition: 0.2s;
+    border-radius: 6px;
+}
+
+.select-items div:hover {
+    background: #EAF2FF;
+    color: #012A5E;
+}
+
+
+
+.home-page{
+    background-color: #FFF6E1;
+   
+}
+
+.navbar-brand img{
+    width: 40px;
+    height: 40px;
+}
+
+.search{
+    border-radius: 100px;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999; /* agar selalu di atas */
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05); /* agar elegan */
+}
+
+
+.navbar.scrolled {
+    background: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Tambahkan efek bayangan */
+  }
+
+ .nav-item {
+    margin-right: 10px; /* Menambahkan jarak antar elemen li */
+}
+
+.nav-link {
+    position: relative;
+    text-decoration: none;
+    font-weight: 600;
+    color: #81858D;
+    letter-spacing: 0.5px;
+    padding: 0 10px;
+}
+
+.nav-link:after {
+    content: "";
+    position: absolute;
+    background-color: #7E8688;
+    height: 2px;
+    width: 0;
+    left: 0;
+    bottom: -6px;
+    transition: 0.3s;
+    border-radius: 100px;
+}
+
+.nav-link:hover {
+    color: #7B8481;
+}
+
+.nav-link:hover:after {
+    width: 100%;
+}
+
+.btn-signup {
+    background-color: #38d39f;
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+}
+
+.btn-signup:hover {
+    background-color: #32c18e;
+}
+
+
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 120px 80px 80px 100px ;
+    gap: 40px;
+}
+
+
+.hero-text {
+    flex: 1; 
+}
+
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: end;
+}
+
+
+
+.hero-text h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #00bcd4;
+    border-radius: 50px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 10px;
+}
+
+.search-bar button {
+    background-color: #38d39f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 500px;  
+    height: auto;
+}
+
+.btn-product {
+    margin-top: 30px;
+}
+
+.btn-product button {
+    background: #FFAF00;          /* warna merah modern */
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-product button:hover {
+    background: #f3a702;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgb(255, 174, 0);
+}
+
+.btn-product button:active {
+    transform: scale(0.96);
+}
+
+.btn-product button span {
+    display: block;
+}
+
+.banner-style-one .content::after {
+    position: absolute;
+    left: -20px;
+    top: -50px;
+    content: "";
+    height: 250px;
+    width: 250px;
+    background: url(8.png);
+    z-index: -1;
+    border-radius: 50%;
+    margin-left: 0;
+    opacity: 0;
+    visibility: hidden;
+    background-size: contain;
+}
+
+.product-image img {
+    width: 100%;
+    max-width: 380px;      /* ubah sesuai kebutuhan */
+    height: 380px;         /* ini menjaga ukuran tetap sama */
+    object-fit: cover;     /* biar rapi, tidak melebar */
+    object-position: center;
+    border-radius: 15px;
+}
+
+/* ==== FIX TOMBOL QUANTITY TIDAK JADI PUTIH SAAT DIKLIK ==== */
+.btn:active,
+.btn:focus,
+.btn:focus-visible {
+    filter: none !important;
+    box-shadow: none !important;
+}
+
+.quantity-min {
+    background-color: #dc3545;
+    transition: all 0.2s ease;
+    color: #fff;
+}
+
+.quantity-min:hover {
+    background-color: #c82333;
+    color: #fff;
+}
+
+.quantity-min:active {
+    background-color: #bd2130 !important;
+    transform: scale(0.95) !important;
+}
+
+.quantity-plus {
+    background-color: #012A5E;
+    transition: all 0.2s ease;
+    color: #fff;
+}
+
+.quantity-plus:hover {
+    background-color: #001f47;
+    color: #fff;
+}
+
+.quantity-plus:active {
+    background-color: #001529 !important;
+    transform: scale(0.95) !important;
+}
+    </style>
+</head>
+
+<body>
+
+
+ <section class="home-page">
+      <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="#"><img src="IMG/logo.png" alt="">Maknyoss</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto me-3">
+              <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">Courses</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+            </ul>
+              <div class="nav-icon">
+            <a href="#" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                <i class='bx bx-shopping-bag'></i><span class="cart-badge" id="cart-count">0</span>
+            </a>
+        </div>
+          </div>
+        </div>
+      </nav>
+
+
+    </div>
+    <div class="hero-section">
+            <div class="hero-text">
+              <h1>Cemilan Pedas <br> <span style="color: #FFC73F;">Maknyoss Makaroni Nyoss</span></h1>
+<p>Nikmati makaroni kering yang renyah dan makaroni basah yang gurih. <br> Rasa bumbu nendang bikin ketagihan!</p>
+
+               <div class="btn-product">
+                <button><span>Lihat Product</span></button>
+               </div>
+            </div>
+            <div class="hero-image">
+                <img src="IMG/thumbnail.png" alt="Hero Image">
+            </div>
+        </div>
+</section>
+
+<section class="added-product py-5" id="menu">
+    <div class="container">
+        <h2 class="display-5 fw-bold text-center mb-5">Menu Terbaru</h2>
+        <div class="row" id="product-grid">
+
+            <!-- PRODUK 1 -->
+            <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
+                <div class="product-card p-3">
+                  <img id="img-MakaroniKering" src="IMG/makaroni-kering.jpg" class="img-fluid">
+
+                    <div class="card-content mt-2">
+                        <h3>Makaroni Kering</h3>
+                        
+              
+                        <!-- VARIAN -->
+                    <div class="custom-select" id="varian-MakaroniKering">
+    <div class="select-selected">
+        <span class="selected-text">Aida</span>
+        
+        <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" class="arrow-icon">
+    </div>
+
+   <div class="select-items">
+        <div data-value="Aida" data-img="IMG/aida.jpg">Aida</div>
+        <div data-value="Balado" data-img="IMG/balado.jpg">Balado</div>
+        <div data-value="Jagung Manis" data-img="IMG/jagung.jpg">Jagung Manis</div>
+        <div data-value="Aida + Balado" data-img="IMG/aida-balado.jpg">Aida + Balado</div>
+        <div data-value="Aida + Jagung Manis" data-img="IMG/aida+jagung.jpg">Aida + Jagung Manis</div>
+        <div data-value="Balado + Jagung Manis" data-img="IMG/balado-jagung.jpg">Balado + Jagung Manis</div>
+        <div data-value="Aida + Balado + Jagung Manis" data-img="IMG/3mix.jpg">Aida + Balado + Jagung Manis</div>
+    </div>
+</div>
+
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                        <p class="price">Rp. 8,000</p>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn quantity-min" onclick="changeQty('Makaroni Kering', -1)">-</button>
+                                <span id="qty-Makaroni Kering" class="fw-bold" style="min-width:30px;text-align:center;">1</span>
+                                <button class="btn quantity-plus" onclick="changeQty('Makaroni Kering', 1)">+</button>
+                            </div>
+                        </div>
+                    
+                        <div class="d-grid gap-2 mt-3">
+                            <button class="btn btn-pesan" onclick="pesanSekarang('Makaroni Kering')">Pesan Sekarang</button>
+                            <button class="btn btn-keranjang" onclick="tambahKeranjang('Makaroni Kering')">+ Keranjang</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUK 2 -->
+            <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
+                <div class="product-card p-3">
+                  <img id="img-MakaroniBasah" src="IMG/makaroni-basah.jpg" class="img-fluid">
+
+                    <div class="card-content mt-2">
+                        <h3>Makaroni Basah</h3>
+                      
+
+                   <div class="custom-select" id="varian-MakaroniBasah">
+    <div class="select-selected">
+        <span class="selected-text">Aida</span>
+        <img src="https://cdn-icons-png.flaticon.com/512/32/32195.png" class="arrow-icon">
+    </div>
+
+   <div class="select-items">
+        <div data-value="Aida" data-img="IMG/basah-aida.jpg">Aida</div>
+        <div data-value="Balado" data-img="IMG/balado.jpg">Balado</div>
+        <div data-value="Jagung Manis" data-img="IMG/jagung.jpg">Jagung Manis</div>
+        <div data-value="Aida + Balado" data-img="IMG/aida-balado.jpg">Aida + Balado</div>
+        <div data-value="Aida + Jagung Manis" data-img="IMG/aida-jagung.jpg">Aida + Jagung Manis</div>
+        <div data-value="Balado + Jagung Manis" data-img="IMG/balado-jagung.jpg">Balado + Jagung Manis</div>
+        <div data-value="Aida + Balado + Jagung Manis" data-img="IMG/3mix.jpg">Aida + Balado + Jagung Manis</div>
+    </div>
+</div>
+
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                              <p class="price">Rp. 10,000</p>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn quantity-min" onclick="changeQty('Makaroni Basah', -1)">-</button>
+                                <span id="qty-Makaroni Basah" class="fw-bold" style="min-width:30px; text-align: center">1</span>
+                                <button class="btn quantity-plus" onclick="changeQty('Makaroni Basah', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-3">
+                            <button class="btn btn-pesan" onclick="pesanSekarang('Makaroni Basah')">Pesan Sekarang</button>
+                            <button class="btn btn-keranjang" onclick="tambahKeranjang('Makaroni Basah')">+ Keranjang</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- OFFCANVAS -->
+<div class="offcanvas offcanvas-end" id="cartOffcanvas">
+    <div class="offcanvas-header bg-success text-white">
+        <h5 class="offcanvas-title">Keranjang (<span id="cart-total-items">0</span>)</h5>
+        <button class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body" id="cart-items">
+        <p class="text-center text-muted my-5">Keranjang kosong</p>
+    </div>
+    <div class="p-3 border-top">
+        <button class="btn btn-success w-100 btn-lg" onclick="checkoutSemua()">Pesan Semua via WA</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const WA_NUMBER = "6287717780013";
+let keranjang = [];
+
+function changeQty(nama, delta) {
+    const span = document.getElementById('qty-' + nama);
+    let qty = parseInt(span.textContent);
+    qty = Math.max(1, qty + delta);
+    span.textContent = qty;
+}
+
+function rupiah(x) {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(x);
+}
+
+function getVarian(nama) {
+    const id = "varian-" + nama.replace(/\s/g, "");
+    return document.querySelector(`#${id} .selected-text`).textContent;
+}
+
+
+function pesanSekarang(nama) {
+    const qty = parseInt(document.getElementById('qty-' + nama).textContent);
+    const varian = getVarian(nama);
+    const harga = parseInt(document.querySelector(`[onclick="pesanSekarang('${nama}')"]`).closest('.product-card').querySelector('.price').textContent.replace(/[^0-9]/g, ''));
+
+    const pesan = `*Pesanan Langsung*%0A%0AMenu: ${nama}%0AVarian: ${varian}%0AJumlah: ${qty} porsi%0ATotal: ${rupiah(harga * qty)}`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${pesan}`, '_blank');
+}
+
+function tambahKeranjang(nama) {
+    const qty = parseInt(document.getElementById('qty-' + nama).textContent);
+    const varian = getVarian(nama);
+    const harga = parseInt(document.querySelector(`[onclick="tambahKeranjang('${nama}')"]`).closest('.product-card').querySelector('.price').textContent.replace(/[^0-9]/g, ''));
+
+    const existing = keranjang.find(i => i.nama === nama && i.varian === varian);
+
+    if (existing) {
+        existing.qty += qty;
+        existing.total = existing.harga * existing.qty;
+    } else {
+        keranjang.push({ nama, varian, harga, qty, total: harga * qty });
+    }
+
+    updateKeranjang();
+    alert(`${nama} (${varian}) ×${qty} ditambahkan!`);
+}
+
+function updateKeranjang() {
+    const totalItems = keranjang.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('cart-count').textContent = totalItems;
+    document.getElementById('cart-total-items').textContent = totalItems;
+
+    const container = document.getElementById('cart-items');
+    if (keranjang.length === 0) {
+        container.innerHTML = '<p class="text-center text-muted my-5">Keranjang kosong</p>';
+        return;
+    }
+
+    let html = '';
+    keranjang.forEach((item, i) => {
+        html += `
+            <div class="d-flex justify-content-between align-items-center border-bottom py-3">
+                <div>
+                    <h6>${item.nama}</h6>
+                    <small>Varian: ${item.varian}</small><br>
+                    <small>${item.qty} × ${rupiah(item.harga)}</small>
+                </div>
+                <div class="text-end">
+                    <strong>${rupiah(item.total)}</strong><br>
+                    <button class="btn btn-sm btn-danger mt-1" onclick="hapusItem(${i})">Hapus</button>
+                </div>
+            </div>`;
+    });
+
+    container.innerHTML = html;
+}
+
+function hapusItem(index) {
+    keranjang.splice(index, 1);
+    updateKeranjang();
+}
+
+function checkoutSemua() {
+    if (keranjang.length === 0) return alert('Keranjang kosong!');
+
+    let pesan = "*Pesanan dari Keranjang*%0A%0A";
+    let total = 0;
+
+    keranjang.forEach(item => {
+        pesan += `${item.nama} (${item.varian}) - ${item.qty} × ${rupiah(item.harga)} = ${rupiah(item.total)}%0A`;
+        total += item.total;
+    });
+
+    pesan += `%0ATotal: ${rupiah(total)}`;
+
+    window.open(`https://wa.me/${WA_NUMBER}?text=${pesan}`, '_blank');
+}
+
+// FIXED UNIVERSAL DROPDOWN + AUTO IMAGE SWITCH
+document.querySelectorAll(".custom-select").forEach(select => {
+    const selected = select.querySelector(".select-selected");
+    const selectedText = select.querySelector(".selected-text");
+    const items = select.querySelector(".select-items");
+
+    selected.addEventListener("click", () => {
+        items.classList.toggle("show");
+        selected.classList.toggle("active");
+    });
+
+    items.querySelectorAll("div").forEach(option => {
+        option.addEventListener("click", () => {
+
+            const rasa = option.dataset.value;
+            const gambar = option.dataset.img;
+
+            selectedText.textContent = rasa;
+
+            // gunakan ID: varian-MakaroniKering → img-MakaroniKering
+            const productName = select.id.replace("varian-", "");
+            const imgTarget = document.getElementById("img-" + productName);
+
+            if (gambar && imgTarget) {
+                imgTarget.src = gambar;
+            }
+
+            items.classList.remove("show");
+            selected.classList.remove("active");
+        });
+    });
+
+    // close when click outside
+    document.addEventListener("click", e => {
+        if (!select.contains(e.target)) {
+            items.classList.remove("show");
+            selected.classList.remove("active");
+        }
+    });
+});
+
+</script>
+
+</body>
+</html>
